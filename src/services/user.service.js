@@ -19,10 +19,17 @@ const insertUser = async (displayName, email, password, image) => {
   if (verifyEmail) return { type: 409, data: { message: 'User already registered' } }; 
   
   await User.create({ displayName, email, password, image });
-  return { type: 201, data: { token: generateToken({ email, displayName }) } };
+  return { type: 201, data: { token: generateToken({ email }) } };
+};
+
+const getAllUsers = async () => {
+  const result = await User.findAll({ attributes: { exclude: ['password'] } });
+  console.log(result);
+  return { type: 200, data: result };
 };
 
 module.exports = {
   login,
   insertUser,
+  getAllUsers,
 };
