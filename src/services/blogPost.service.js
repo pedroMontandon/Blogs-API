@@ -34,7 +34,7 @@ const getAllPosts = async () => {
   const result = await BlogPost
   .findAll(
     { include: [{ model: User, as: 'user', attributes: { exclude: 'password' } },
-     { model: Category, as: 'categories' }] },
+      { model: Category, as: 'categories' }] },
    );
   return { type: 200, data: result };
 };
@@ -43,16 +43,23 @@ const getPostById = async (id) => {
   const result = await BlogPost
   .findByPk(id, { include: [{ model: User, as: 'user', attributes: { exclude: 'password' } },
   { model: Category, as: 'categories' }] });
-  console.log(result);
   if (!result) return { type: 404, data: { message: 'Post does not exist' } }; 
   return { type: 200, data: result };
 };
 
+const updatePost = async (title, content, id) => {
+  await BlogPost.update({ title, content }, { where: { id } });
+  const { data } = await getPostById(id);
+  return { type: 200, data };
+};
+
 module.exports = {
+  findByToken,
   verifyCategories,
   post,
   getAllPosts,
   getPostById,
+  updatePost,
 };
 
 // {
