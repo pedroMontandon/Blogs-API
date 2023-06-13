@@ -16,8 +16,9 @@ module.exports = {
         allowNull: false,
         type: DataTypes.STRING,
       },
-      user_id: {
+      userId: {
         allowNull: false,
+        field: 'user_id',
         type: DataTypes.INTEGER,
         references: { model: 'users', key: 'id' }
       },
