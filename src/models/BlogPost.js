@@ -5,7 +5,9 @@ module.exports = (sequelize, DataTypes) => {
     content: DataTypes.STRING,
     userId: { type: DataTypes.INTEGER, foreignKey: true },
     published: { type: DataTypes.DATE, defaultValue: DataTypes.NOW},
-    updated: { type: DataTypes.DATE, defaultValue: sequelize.literal('CURRENT_TIMESTAMP() ON UPDATE CURRENT_TIMESTAMP()')},
+    // updated: { type: DataTypes.DATE, defaultValue: sequelize.literal('CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP')},
+    // updated: { type: DataTypes.DATE, defaultValue: sequelize.literal('CURRENT_TIMESTAMP() ON UPDATE CURRENT_TIMESTAMP()')},
+    updated: { type: DataTypes.DATE, defaultValue: DataTypes.NOW},
   }, {
       tableName: 'blog_posts',
       timestamps: false,

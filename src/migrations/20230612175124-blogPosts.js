@@ -20,15 +20,19 @@ module.exports = {
         allowNull: false,
         field: 'user_id',
         type: DataTypes.INTEGER,
-        references: { model: 'users', key: 'id' }
+        references: { model: 'users', key: 'id' },
+        onUpdtade: 'CASCADE',
+        onDelete: 'CASCADE',
       },
       published: {
         allowNull: false,
         type: DataTypes.DATE,
+        defaultValue: DataTypes.literal('CURRENT_TIMESTAMP'),
       },
       updated: {
         allowNull: false,
         type: DataTypes.DATE,
+        defaultValue: DataTypes.literal('CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP'),
       },
     });
   },

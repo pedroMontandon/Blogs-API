@@ -25,10 +25,21 @@ const updatePost = async (req, res) => {
   const { id } = req.params;
   const { title, content } = req.body;
   const token = req.headers.authorization;
-  const foundId = await blogPostService.findByToken(token);
-  if (Number(foundId) !== Number(id)) return res.status(401).json({ message: 'Unauthorized user' });
+  if (!await blogPostService.authorizedId(token, id)) {
+    return res.status(401).json({ message: 'Unauthorized user' });
+  }
   const { type, data } = await blogPostService.updatePost(title, content, id);
   return res.status(type).json(data);
+};
+
+const deletePost = async (req, res) => {
+  const { id } = req.params;
+  const token = req.headers.authorization;
+  if (!await blogPostService.authorizedId(token, id)) {
+    return res.status(401).json({ message: 'Unauthorized user' });
+  }
+  const { type, data } = await blogPostService.deletePost(id);
+  return res.status(type).json(data); 
 };
 
 module.exports = {
@@ -36,8 +47,5 @@ module.exports = {
   getAllPosts,
   getPostById,
   updatePost,
+  deletePost,
 };
-
-// {
-// eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6Imxld2lzaGFtaWx0b25AZ21haWwuY29tIiwiaWF0IjoxNjg2Njc2ODE4LCJleHAiOjE2ODY2ODA0MTh9.tjK0mhoKe71YUmQvweTLVwWaxjYU3rvjSvE1v7XEXns
-// }

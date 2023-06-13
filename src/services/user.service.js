@@ -3,7 +3,7 @@ const { User } = require('../models');
 
 const { JWT_SECRET } = process.env;
 const jwtConfig = {
-  expiresIn: '1h',
+  expiresIn: '7d',
 };
 
 const generateToken = (user) => (jwt.sign(user, JWT_SECRET, jwtConfig));

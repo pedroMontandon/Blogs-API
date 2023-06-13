@@ -6,12 +6,16 @@ module.exports = {
       post_id: {
         allowNull: false,
         type: DataTypes.INTEGER,
-        references: { model: 'blog_posts', key: 'id' }
+        references: { model: 'blog_posts', key: 'id' },
+        onUpdtade: 'CASCADE',
+        onDelete: 'CASCADE',
       },
       category_id: {
         allowNull: false,
         type: DataTypes.INTEGER,
-        references: { model: 'categories', key: 'id' }
+        references: { model: 'categories', key: 'id' },
+        onUpdtade: 'CASCADE',
+        onDelete: 'CASCADE',
       },
     });
   },

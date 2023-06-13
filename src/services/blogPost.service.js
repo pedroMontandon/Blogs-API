@@ -53,6 +53,22 @@ const updatePost = async (title, content, id) => {
   return { type: 200, data };
 };
 
+const deletePost = async (id) => {
+  const idFound = await BlogPost.findByPk(id);
+  console.log(idFound);
+  if (!idFound) return { type: 404, data: { message: 'Post does not exist' } };
+  await PostCategory.destroy({ where: { postId: id } });
+  await BlogPost.destroy({ where: { id } });
+  return { type: 204, data: '' };
+};
+
+const authorizedId = async (token, postId) => {
+  const tokenId = await findByToken(token);
+  const { data: { dataValues } } = await getPostById(postId);
+  if (!dataValues) return true;
+  return Number(tokenId) === Number(dataValues.userId);
+};
+
 module.exports = {
   findByToken,
   verifyCategories,
@@ -60,8 +76,6 @@ module.exports = {
   getAllPosts,
   getPostById,
   updatePost,
+  deletePost,
+  authorizedId,
 };
-
-// {
-//     "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InRlc3R1ZG9AZW1haWwuY29tIiwiaWF0IjoxNjg2NjE2NTc0LCJleHAiOjE2ODY2MjAxNzR9.WrjumM2FBABmt27BFlQ8W9SjHsL4ab9tpIHmrBxGFXc"
-//   }
