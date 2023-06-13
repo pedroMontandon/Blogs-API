@@ -13,12 +13,6 @@ const findByToken = async (token) => {
   return id;
 };
 
-// const post = async (token, title, content) => {
-//   const userId = await findByToken(token);
-//   const result = await BlogPost.create({ title, content, userId });
-//   return { type: 201, data: result };
-// };
-
 const verifyCategories = async (categoryIds) => {
   const { count } = await Category.findAndCountAll({ where: { id: categoryIds } });
   if (Number(count) !== categoryIds.length) return null;
@@ -30,17 +24,25 @@ const post = async (token, title, content, categoryIds) => {
   const result = await sequelize.transaction(async (t) => {
     const posted = await BlogPost.create({ title, content, userId }, { transaction: t });
     const postCategories = categoryIds.map((id) => ({ postId: posted.id, categoryId: id }));
-    console.log('postCategories: ', postCategories);
-    const test = await PostCategory.bulkCreate(postCategories, { transaction: t });
-    console.log('bulk: ', test);
+    await PostCategory.bulkCreate(postCategories, { transaction: t });
     return { type: 201, data: posted };
   });
   return result;
 };
 
+const getAllPosts = async () => {
+  const result = await BlogPost
+  .findAll(
+    { include: [{ model: User, as: 'user', attributes: { exclude: 'password' } },
+     { model: Category, as: 'categories' }] },
+   );
+  return { type: 200, data: result };
+};
+
 module.exports = {
   verifyCategories,
   post,
+  getAllPosts,
 };
 
 // {
