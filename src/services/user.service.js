@@ -33,9 +33,15 @@ const getUser = async (id) => {
   return { type: 200, data: result };
 };
 
+const deleteUser = async (id) => {
+  await User.destroy({ where: { id } });
+  return { type: 204, data: '' };
+};
+
 module.exports = {
   login,
   insertUser,
   getAllUsers,
   getUser,
+  deleteUser,
 };
