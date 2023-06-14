@@ -4,6 +4,8 @@ const Sequelize = require('sequelize');
 const config = require('../config/config');
 const { BlogPost, User, PostCategory, Category } = require('../models');
 
+const { Op } = Sequelize;
+
 const env = process.env.NODE_ENV;
 const sequelize = new Sequelize(config[env]);
 
@@ -55,11 +57,20 @@ const updatePost = async (title, content, id) => {
 
 const deletePost = async (id) => {
   const idFound = await BlogPost.findByPk(id);
-  console.log(idFound);
   if (!idFound) return { type: 404, data: { message: 'Post does not exist' } };
   await PostCategory.destroy({ where: { postId: id } });
   await BlogPost.destroy({ where: { id } });
   return { type: 204, data: '' };
+};
+
+const searchPosts = async (word) => {
+  const query = await BlogPost.findAll({
+   where: { [Op.or]: [{ title: { [Op.like]: `%${word}%` } },
+    { content: { [Op.like]: `%${word}%` } }] },
+    include: [{ model: User, as: 'user', attributes: { exclude: 'password' } }, 
+    { model: Category, as: 'categories' }],
+  });
+  return { type: 200, data: query };
 };
 
 const authorizedId = async (token, postId) => {
@@ -78,4 +89,5 @@ module.exports = {
   updatePost,
   deletePost,
   authorizedId,
+  searchPosts,
 };

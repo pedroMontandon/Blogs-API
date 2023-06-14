@@ -4,6 +4,7 @@ const { blogPostController } = require('../controllers');
 
 const router = express.Router();
 
+router.get('/search', tokenValidation.validateToken, blogPostController.searchPosts);
 router.get('/:id', tokenValidation.validateToken, blogPostController.getPostById);
 router.delete('/:id', tokenValidation.validateToken, blogPostController.deletePost);
 router.put(
